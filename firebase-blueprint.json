@@ -8,7 +8,6 @@
         "title": { "type": "string", "description": "The headline of the post." },
         "excerpt": { "type": "string", "description": "A short summary of the post." },
         "content": { "type": "string", "description": "The full markdown content of the post." },
-        "category": { "type": "string", "description": "The legal category (e.g., Constitutional, Corporate)." },
         "authorName": { "type": "string", "description": "The name of the author." },
         "authorRole": { "type": "string", "description": "The role of the author." },
         "authorImage": { "type": "string", "description": "URL to the author's profile image." },
@@ -18,7 +17,7 @@
         "status": { "type": "string", "enum": ["draft", "published"], "description": "Current status of the post." },
         "views": { "type": "number", "description": "Number of views." }
       },
-      "required": ["title", "content", "category", "authorName", "publishedAt", "status"]
+      "required": ["title", "content", "authorName", "publishedAt", "status"]
     },
     "User": {
       "title": "User Profile",

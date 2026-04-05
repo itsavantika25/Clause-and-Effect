@@ -3,7 +3,6 @@ export interface Post {
   title: string;
   excerpt: string;
   content: string;
-  category: string;
   authorName: string;
   authorRole: string;
   authorImage: string;
