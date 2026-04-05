@@ -81,7 +81,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
           <div className="flex items-center gap-4">
             <button onClick={() => handleNavClick('/', true)} className="flex items-center gap-4 group">
               <div className="w-10 h-10 rounded-full flex items-center justify-center transition-transform">
-               <img src="logo.png" alt="logo" />
+               <img src="/img/logo.png" alt="logo" />
               </div>
               <span className="text-2xl font-serif text-[#050a18] tracking-tighter font-headline font-bold">Clause & Effect</span>
             </button>
@@ -215,9 +215,6 @@ const Footer = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-7xl mx-auto">
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#fdd25c] rounded-full flex items-center justify-center text-[#050a18]">
-              <Scale className="w-5 h-5" />
-            </div>
             <div className="font-headline text-2xl font-bold tracking-tighter">Clause and Effect</div>
           </div>
           <p className="text-slate-400 font-body text-sm uppercase tracking-widest leading-loose">
@@ -231,6 +228,11 @@ const Footer = () => {
             <button onClick={() => scrollToSection('team')} className="block text-left text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest">Our Team</button>
             <button onClick={() => scrollToSection('contact')} className="block text-left text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest">Contact Us</button>
           </div>
+            <div className="space-y-4">
+            <h4 className="text-[#fdd25c] font-bold text-xs uppercase tracking-widest mb-6">Social Links</h4>
+            <button onClick={() => window.open('https://www.instagram.com/clauseandeffect_', '_blank')} className="block text-left text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest">Instagram</button>
+            <button onClick={() => window.open('https://www.youtube.com/@clauseandeffect57', '_blank')} className="block text-left text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest">YouTube</button>
+          </div>
         </div>
       </div>
     </footer>
@@ -243,11 +245,11 @@ const Landing = () => {
   const [selectedReel, setSelectedReel] = useState<any>(null);
 
   const team = [
-    { name: 'Julian Sterling', role: 'Editor-in-Chief & Co-Founder', desc: 'Former appellate attorney turned digital advocate for judicial transparency.', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=500' },
-    { name: 'Elena Vance', role: 'Senior Legal Strategist & Co-Founder', desc: 'Specializing in the intersection of constitutional law and emerging technologies.', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400&h=500' },
-    { name: 'Marcus Thorne', role: 'Head of Content & Lead Analyst', desc: 'Crafting narratives that humanize the legal process for a global audience.', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=500' },
-    { name: 'Sarah Chen', role: 'Tech-Head & Co-Founder', desc: 'Bridging the gap between legal frameworks and digital innovation.', img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400&h=500' },
-    { name: 'David Miller', role: 'Director of Advocacy & Senior Partner', desc: 'Dedicated to relentless pursuit of justice through modern editorial analysis.', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=500' }
+    { name: 'Ridhima Khanna', role: 'Founder & President', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=500' },
+    { name: 'Asees Kaur Oberoi', role: 'Co-Founder & Vice president', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400&h=500' },
+    { name: 'Avantika Agarwal', role: 'Co-Founder & Technical Head', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=500' },
+    { name: 'Devanshi Pahwa', role: 'Research Head', img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400&h=500' },
+    { name: 'Hiya Agarwal', role: 'Graphic Designer', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=500' }
   ];
 
   const reels = [
@@ -273,17 +275,17 @@ const Landing = () => {
             transition={{ duration: 0.8 }}
             className="space-y-8"
           >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-[#fdd25c]/10 text-[#fdd25c] text-xs font-bold tracking-[0.2em] uppercase">Advocating for Modern Legal Thought</span>
+            <span className="inline-block px-4 py-1.5 rounded-full bg-[#fdd25c]/10 text-[#fdd25c] text-xs font-bold tracking-[0.2em] uppercase">Asking the Questions Others are too Scared to Think.</span>
             <h1 className="text-6xl md:text-8xl font-headline text-white leading-[0.9] tracking-tight">
-              The Law, <br />
-              <span className="italic text-[#fdd25c]">Refined.</span>
+             Breaking Down <br />
+              <span className="italic text-[#fdd25c]">the Indian Law</span>
             </h1>
             <p className="text-xl text-slate-300 max-w-md font-body leading-relaxed">
-              Redefining legal discourse through high-contrast editorial analysis and relentless pursuit of justice in the modern age.
+              Creating change through conversations, sparking thought and encouraging the youth to think past just what we're told.
             </p>
             <div className="flex items-center gap-6 pt-4">
               <Link to="/blogs" className="px-8 py-4 bg-[#fdd25c] text-[#050a18] rounded-xl font-bold text-lg hover:scale-105 transition-transform">Start the Brief</Link>
-              <button onClick={() => document.getElementById('team')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-4 text-white border border-white/20 rounded-xl font-bold text-lg backdrop-blur-sm hover:bg-white/10 transition-colors">Our Vision</button>
+              <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-4 text-white border border-white/20 rounded-xl font-bold text-lg backdrop-blur-sm hover:bg-white/10 transition-colors">Our Vision</button>
             </div>
           </motion.div>
           <div className="relative hidden md:block">
@@ -305,11 +307,11 @@ const Landing = () => {
       </section>
 
       {/* Goal & Why We Exist Section */}
-      <section className="py-32 px-8 bg-white">
+      <section className="py-32 px-8 bg-white" id="about">
         <div className="max-w-7xl mx-auto">
           <div className="brief-accent mb-16">
-            <h2 className="text-4xl md:text-5xl font-headline font-bold text-[#050a18]">Foundational Pillars</h2>
-            <p className="text-gray-500 font-body mt-2">The architecture of our mission and purpose.</p>
+            <h2 className="text-4xl md:text-5xl font-headline font-bold text-[#050a18]">About Us</h2>
+            <p className="text-gray-500 font-body mt-2">How Clause and Effect came to be and its future.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             <div className="md:col-span-7 bg-gray-50 p-12 rounded-3xl shadow-sm flex flex-col justify-between">
@@ -319,10 +321,6 @@ const Landing = () => {
                 <p className="text-lg text-gray-600 leading-relaxed mb-8">
                   We aim to bridge the gap between complex legal scholarship and public understanding. By translating the intricacies of the court into compelling editorial narratives, we empower the modern citizen to engage with the law.
                 </p>
-              </div>
-              <div className="flex items-center gap-4 text-[#050a18] font-bold hover:gap-6 transition-all cursor-pointer">
-                <span>Read the Manifesto</span>
-                <ArrowRight className="w-5 h-5" />
               </div>
             </div>
             <div className="md:col-span-5 bg-[#050a18] p-12 rounded-3xl text-white relative overflow-hidden">
@@ -405,7 +403,7 @@ const Landing = () => {
       <section id="team" className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-8">
           <div className="text-center mb-20">
-            <h2 className="text-5xl font-headline font-bold text-[#050a18] mb-4">The Editorial Board</h2>
+            <h2 className="text-5xl font-headline font-bold text-[#050a18] mb-4">Meet the Team</h2>
             <div className="w-24 h-1 bg-[#fdd25c] mx-auto"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
@@ -416,7 +414,6 @@ const Landing = () => {
                 </div>
                 <h4 className="text-xl font-headline font-bold text-[#050a18]">{member.name}</h4>
                 <p className="text-[#fdd25c] font-label text-[10px] font-bold uppercase tracking-widest mb-4">{member.role}</p>
-                <p className="text-gray-500 font-body text-xs leading-relaxed">{member.desc}</p>
               </div>
             ))}
           </div>
@@ -427,9 +424,9 @@ const Landing = () => {
       <section id="contact" className="py-32 px-8 bg-[#050a18] text-white">
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-block w-24 h-1 bg-[#fdd25c] mb-12"></div>
-          <h2 className="text-5xl md:text-7xl font-headline font-bold mb-8">Connect with the Brief</h2>
+          <h2 className="text-5xl md:text-7xl font-headline font-bold mb-8">Contact Us, 24/7</h2>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-16">
-            Join our community for real-time legal analysis and modern discourse. We're active on Instagram and always open for editorial inquiries.
+            Feel free to reach out to us anytime for legal advice, debates or just to talk about any legal topics. DM us on Instagram, or email us for more formal queries.
           </p>
           
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
