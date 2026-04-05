@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, X, Search, ChevronRight, ArrowRight, 
   LayoutDashboard, LogOut, Plus, Edit2, Trash2, 
@@ -48,9 +48,9 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
 
   const navLinks = [
     { name: 'Home', path: '/', isAnchor: true },
-    { name: 'Blogs', path: '/blogs', isAnchor: false },
     { name: 'Our Team', path: '/#team', isAnchor: true },
     { name: 'Contact', path: '/#contact', isAnchor: true },
+    { name: 'Blogs', path: '/blogs', isAnchor: false },
   ];
 
   const handleNavClick = (path: string, isAnchor: boolean) => {
@@ -80,8 +80,8 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
         <div className="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
           <div className="flex items-center gap-4">
             <button onClick={() => handleNavClick('/', true)} className="flex items-center gap-4 group">
-              <div className="w-10 h-10 bg-[#050a18] rounded-full flex items-center justify-center text-[#fdd25c] group-hover:scale-110 transition-transform">
-                <Scale className="w-6 h-6" />
+              <div className="w-10 h-10 rounded-full flex items-center justify-center transition-transform">
+               <img src="logo.png" alt="logo" />
               </div>
               <span className="text-2xl font-serif text-[#050a18] tracking-tighter font-headline font-bold">Clause & Effect</span>
             </button>
@@ -218,18 +218,13 @@ const Footer = () => {
             <div className="w-8 h-8 bg-[#fdd25c] rounded-full flex items-center justify-center text-[#050a18]">
               <Scale className="w-5 h-5" />
             </div>
-            <div className="font-headline text-2xl font-bold tracking-tighter">Clause & Effect</div>
+            <div className="font-headline text-2xl font-bold tracking-tighter">Clause and Effect</div>
           </div>
           <p className="text-slate-400 font-body text-sm uppercase tracking-widest leading-loose">
-            © 2026 Clause & Effect. Advocating for Modern Legal Thought.
+            © 2026 Clause and Effect.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <h4 className="text-[#fdd25c] font-bold text-xs uppercase tracking-widest mb-6">Legal</h4>
-            <a className="block text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest" href="#">Privacy Policy</a>
-            <a className="block text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest" href="#">Editorial Standards</a>
-          </div>
           <div className="space-y-4">
             <h4 className="text-[#fdd25c] font-bold text-xs uppercase tracking-widest mb-6">Navigation</h4>
             <button onClick={() => scrollToSection('hero')} className="block text-left text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest">Home</button>
@@ -452,14 +447,14 @@ const Landing = () => {
             </a>
             
             <a 
-              href="mailto:briefs@clauseandeffect.law"
+              href="mailto:briefs@clause.and.effect57@gmail.com"
               className="flex flex-col items-center p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
             >
               <div className="w-16 h-16 rounded-full bg-[#fdd25c] flex items-center justify-center text-[#050a18] mb-6 group-hover:scale-110 transition-transform">
                 <Send className="w-8 h-8" />
               </div>
               <h3 className="text-2xl font-headline font-bold mb-2">Email</h3>
-              <p className="text-[#fdd25c] font-bold">briefs@clauseandeffect.law</p>
+              <p className="text-[#fdd25c] font-bold">@clause.and.effect57@gmail.com</p>
             </a>
           </div>
         </div>
@@ -545,15 +540,15 @@ const BlogList = () => {
     <div className="pt-32 pb-40 min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-16">
-          <h1 className="text-5xl font-serif font-bold mb-4">The Briefings</h1>
+          <h1 className="text-5xl font-serif font-bold mb-4">C&E Blog</h1>
           <p className="text-gray-500 text-lg">Latest legal analysis and editorial insights, sorted by date.</p>
         </div>
 
         {posts.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
             <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-serif font-bold text-gray-900">No briefings found</h3>
-            <p className="text-gray-500 mt-2">Check back later for new editorial content.</p>
+            <h3 className="text-xl font-serif font-bold text-gray-900">No blogs found</h3>
+            <p className="text-gray-500 mt-2">Check back later for new content.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -694,7 +689,7 @@ const PostDetail = () => {
 };
 
 const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
-  const isAdmin = user?.email === 'avantika.agarwal2505@gmail.com';
+  const isAdmin = user?.email === 'avantika.agarwal2505@gmail.com' || user?.email === 'clause.and.effect57@gmail.com';
   const [posts, setPosts] = useState<Post[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentPost, setCurrentPost] = useState<Partial<Post>>({
@@ -777,14 +772,14 @@ const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
         <div className="flex justify-between items-center mb-12">
           <div>
             <h1 className="text-4xl font-serif font-bold">Editorial Dashboard</h1>
-            <p className="text-gray-500 mt-2">Manage your publications and analysis</p>
+            <p className="text-gray-500 mt-2">Manage your publications and blogs</p>
           </div>
           <button 
             onClick={() => setIsEditing(true)}
             className="flex items-center space-x-2 bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-900 transition-all"
           >
             <Plus className="w-5 h-5" />
-            <span>New Analysis</span>
+            <span>New Blog</span>
           </button>
         </div>
 
@@ -876,7 +871,7 @@ const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
                   className="bg-black text-white px-10 py-3 rounded-full font-bold hover:bg-gray-900 transition-all flex items-center space-x-2"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Save Analysis</span>
+                  <span>Save Blog</span>
                 </button>
               </div>
             </form>
@@ -886,7 +881,7 @@ const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Analysis</th>
+                  <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Blog</th>
                   <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Status</th>
                   <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Date</th>
                   <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500 text-right">Actions</th>
