@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "Post": {
+      "title": "Editorial Post",
+      "description": "A legal editorial article.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "The headline of the post." },
+        "excerpt": { "type": "string", "description": "A short summary of the post." },
+        "content": { "type": "string", "description": "The full markdown content of the post." },
+        "category": { "type": "string", "description": "The legal category (e.g., Constitutional, Corporate)." },
+        "authorName": { "type": "string", "description": "The name of the author." },
+        "authorRole": { "type": "string", "description": "The role of the author." },
+        "authorImage": { "type": "string", "description": "URL to the author's profile image." },
+        "coverImage": { "type": "string", "description": "URL to the post's cover image." },
+        "readingTime": { "type": "string", "description": "Estimated reading time (e.g., '5 min read')." },
+        "publishedAt": { "type": "string", "format": "date-time", "description": "ISO timestamp of publication." },
+        "status": { "type": "string", "enum": ["draft", "published"], "description": "Current status of the post." },
+        "views": { "type": "number", "description": "Number of views." }
+      },
+      "required": ["title", "content", "category", "authorName", "publishedAt", "status"]
+    },
+    "User": {
+      "title": "User Profile",
+      "description": "A user of the platform.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["admin", "editor"] },
+        "displayName": { "type": "string" }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "posts": {
+      "schema": "Post",
+      "description": "Collection of editorial posts."
+    },
+    "users": {
+      "schema": "User",
+      "description": "Collection of user profiles."
+    }
+  }
+}
