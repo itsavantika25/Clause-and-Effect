@@ -17,11 +17,20 @@ import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import ReactMarkdown from 'react-markdown';
 import { db, auth, signInWithGoogle, logout } from './firebase';
 import { Post, UserProfile } from './types';
+
+interface Reel {
+  id: string;
+  title: string;
+  views: string;
+  img: string;
+  video: string;
+  order?: number;
+}
 import { cn } from './lib/utils';
 
 // --- Components ---
 
-const Navbar = ({ user }: { user: FirebaseUser | null }) => {
+function Navbar({ user }: { user: FirebaseUser | null; }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -82,12 +91,12 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
           <div className="flex items-center gap-4">
             <button onClick={() => handleNavClick('/', true)} className="flex items-center gap-4 group">
               <div className="w-10 h-10 rounded-full flex items-center justify-center transition-transform">
-               <img src="/img/logo.png" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+                <img src="/img/logo.png" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
               </div>
               <span className="text-lg md:text-2xl font-serif text-[#050a18] tracking-tighter font-headline font-bold">Clause & Effect</span>
             </button>
           </div>
-          
+
           <nav className="hidden md:flex items-center space-x-8 font-headline tracking-tight">
             {navLinks.map((link) => (
               <button
@@ -96,7 +105,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
                 className={cn(
                   "transition-all duration-300 ease-in-out pb-1 font-bold",
                   (location.pathname === link.path || (location.pathname === '/' && link.path === '/'))
-                    ? "text-[#050a18] border-b-2 border-[#fdd25c]" 
+                    ? "text-[#050a18] border-b-2 border-[#fdd25c]"
                     : "text-slate-500 hover:text-[#050a18]"
                 )}
               >
@@ -104,12 +113,12 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
               </button>
             ))}
             {user && (
-              <Link 
-                to="/admin" 
+              <Link
+                to="/admin"
                 className={cn(
                   "transition-all duration-300 ease-in-out pb-1 font-bold",
-                  location.pathname === '/admin' 
-                    ? "text-slate-900 border-b-2 border-[#fdd25c]" 
+                  location.pathname === '/admin'
+                    ? "text-slate-900 border-b-2 border-[#fdd25c]"
                     : "text-slate-500 hover:text-[#0A1128]"
                 )}
               >
@@ -120,21 +129,20 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
 
           <div className="flex items-center gap-2 md:gap-4">
             {user ? (
-         <div className="flex items-center gap-2 md:gap-4">
-  <img 
-    src={user.photoURL || ''} 
-    alt={user.displayName || ''} 
-    className="hidden md:block w-8 h-8 rounded-full" 
-  />
-  <button 
-    onClick={logout}
-    className="px-3 md:px-6 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-all text-sm md:text-base"
-  >
-    Logout
-  </button>
-</div>
+              <div className="flex items-center gap-2 md:gap-4">
+                <img
+                  src={user.photoURL || ''}
+                  alt={user.displayName || ''}
+                  className="hidden md:block w-8 h-8 rounded-full" />
+                <button
+                  onClick={logout}
+                  className="px-3 md:px-6 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-all text-sm md:text-base"
+                >
+                  Logout
+                </button>
+              </div>
             ) : (
-              <button 
+              <button
                 onClick={handleSignIn}
                 disabled={isSigningIn}
                 className="px-6 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-all"
@@ -142,7 +150,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
                 {isSigningIn ? "..." : "Login"}
               </button>
             )}
-            
+
             {/* Mobile Menu Toggle */}
             <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2 ml-1">
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -159,7 +167,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
               exit={{ opacity: 0, height: 0 }}
               className="md:hidden bg-white border-b border-gray-100 overflow-hidden"
             >
-             <div className="px-4 pt-2 pb-6 space-y-4 font-headline">
+              <div className="px-4 pt-2 pb-6 space-y-4 font-headline">
                 {navLinks.map((link) => (
                   <button
                     key={link.name}
@@ -203,7 +211,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
       </AnimatePresence>
     </>
   );
-};
+}
 
 const Footer = () => {
   const scrollToSection = (id: string) => {
@@ -248,7 +256,16 @@ const Footer = () => {
 // --- Pages ---
 
 const Landing = () => {
-  const [selectedReel, setSelectedReel] = useState<any>(null);
+  const [selectedReel, setSelectedReel] = useState<Reel | null>(null);
+  const [reels, setReels] = useState<Reel[]>([]);
+
+  useEffect(() => {
+    const q = query(collection(db, 'reels'), orderBy('order', 'asc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setReels(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Reel[]);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const team = [
     { name: 'Ridhima Khanna', role: 'Founder & President', img: '/img/ridhima.jpeg' },
@@ -256,13 +273,6 @@ const Landing = () => {
     { name: 'Avantika Agarwal', role: 'Co-Founder & Technical Head', img: '/img/avantika.JPG' },
     { name: 'Devanshi Pahwa', role: 'Research Head', img: '/img/devanshi.webp' },
     { name: 'Hiya Agarwal', role: 'Graphic Designer', img: '/img/hiya.jpeg' }
-  ];
-
-  const reels = [
-    { id: 1, views: '124k', title: 'Understanding Tort Reform in 60 Seconds', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-reading-a-document-in-his-office-40011-large.mp4' },
-    { id: 2, views: '89k', title: 'The Future of Intellectual Property', img: 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-working-at-his-desk-40010-large.mp4' },
-    { id: 3, views: '210k', title: 'Corporate Ethics vs. Compliance', img: 'https://images.unsplash.com/photo-1450175804616-78ff2560c047?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-talking-on-the-phone-in-his-office-40009-large.mp4' },
-    { id: 4, views: '56k', title: 'Navigating Privacy in the Digital Era', img: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-writing-on-a-notebook-40012-large.mp4' }
   ];
 
   return (
@@ -714,78 +724,95 @@ const AdminEmails = [
 const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
   const navigate = useNavigate();
   const isAdmin = user?.email && AdminEmails.includes(user.email);
+  const [activeTab, setActiveTab] = useState<'blogs' | 'reels'>('blogs');
+
+  // --- Blog state ---
   const [posts, setPosts] = useState<Post[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingPost, setIsEditingPost] = useState(false);
   const [currentPost, setCurrentPost] = useState<Partial<Post>>({
-    title: '',
-    excerpt: '',
-    content: '',
+    title: '', excerpt: '', content: '',
     authorName: user?.displayName || '',
     authorRole: 'Contributor',
     authorImage: user?.photoURL || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100',
     coverImage: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200&h=800',
-    readingTime: '5 min read',
-    status: 'draft',
-    publishedAt: new Date().toISOString(),
-    views: 0
+    readingTime: '5 min read', status: 'draft',
+    publishedAt: new Date().toISOString(), views: 0
   });
 
-  
+  // --- Reel state ---
+  const [reels, setReels] = useState<Reel[]>([]);
+  const [isEditingReel, setIsEditingReel] = useState(false);
+  const [currentReel, setCurrentReel] = useState<Partial<Reel>>({
+    title: '', views: '', img: '', video: '', order: 0
+  });
 
   useEffect(() => {
     const q = query(collection(db, 'posts'), orderBy('publishedAt', 'desc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setPosts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Post[]);
+    const unsub = onSnapshot(q, (snap) => {
+      setPosts(snap.docs.map(d => ({ id: d.id, ...d.data() })) as Post[]);
     });
-    return () => unsubscribe();
+    return () => unsub();
   }, []);
 
-const handleSave = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    if (currentPost.id) {
-      await updateDoc(doc(db, 'posts', currentPost.id), {
-        ...currentPost,
-        publishedAt: currentPost.status === 'published'
-          ? new Date().toISOString()
-          : currentPost.publishedAt
-      });
-    } else {
-      await addDoc(collection(db, 'posts'), {
-        ...currentPost,
-        publishedAt: new Date().toISOString()
-      });
-    }
-
-    setIsEditing(false);
-
-    setCurrentPost({
-      id: undefined, 
-      title: '',
-      excerpt: '',
-      content: '',
-      authorName: user?.displayName || '',
-      authorRole: 'Contributor',
-      authorImage: user?.photoURL || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100',
-      coverImage: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200&h=800',
-      readingTime: '5 min read',
-      status: 'published',
-      publishedAt: new Date().toISOString(),
-      views: 0
+  useEffect(() => {
+    const q = query(collection(db, 'reels'), orderBy('order', 'asc'));
+    const unsub = onSnapshot(q, (snap) => {
+      setReels(snap.docs.map(d => ({ id: d.id, ...d.data() })) as Reel[]);
     });
+    return () => unsub();
+  }, []);
 
-    navigate('/blogs');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const emptyPost = (): Partial<Post> => ({
+    id: undefined, title: '', excerpt: '', content: '',
+    authorName: user?.displayName || '',
+    authorRole: 'Contributor',
+    authorImage: user?.photoURL || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100',
+    coverImage: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200&h=800',
+    readingTime: '5 min read', status: 'published',
+    publishedAt: new Date().toISOString(), views: 0
+  });
 
-  } catch (err) {
-    console.error("Error saving post:", err);
-  }
-};
+  const emptyReel = (): Partial<Reel> => ({
+    id: undefined, title: '', views: '', img: '', video: '', order: reels.length
+  });
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this post?')) {
-      await deleteDoc(doc(db, 'posts', id));
-    }
+  const handleSavePost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (currentPost.id) {
+        await updateDoc(doc(db, 'posts', currentPost.id), {
+          ...currentPost,
+          publishedAt: currentPost.status === 'published' ? new Date().toISOString() : currentPost.publishedAt
+        });
+      } else {
+        await addDoc(collection(db, 'posts'), { ...currentPost, publishedAt: new Date().toISOString() });
+      }
+      setIsEditingPost(false);
+      setCurrentPost(emptyPost());
+      navigate('/blogs');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) { console.error("Error saving post:", err); }
+  };
+
+  const handleDeletePost = async (id: string) => {
+    if (window.confirm('Delete this blog post?')) await deleteDoc(doc(db, 'posts', id));
+  };
+
+  const handleSaveReel = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (currentReel.id) {
+        await updateDoc(doc(db, 'reels', currentReel.id), { ...currentReel });
+      } else {
+        await addDoc(collection(db, 'reels'), { ...currentReel });
+      }
+      setIsEditingReel(false);
+      setCurrentReel(emptyReel());
+    } catch (err) { console.error("Error saving reel:", err); }
+  };
+
+  const handleDeleteReel = async (id: string) => {
+    if (window.confirm('Delete this reel?')) await deleteDoc(doc(db, 'reels', id));
   };
 
   if (!user) return <div className="pt-40 text-center">Please sign in to access the dashboard.</div>;
@@ -794,7 +821,7 @@ const handleSave = async (e: React.FormEvent) => {
       <Lock className="w-12 h-12 text-red-500 mx-auto mb-6" />
       <h2 className="text-2xl font-serif font-bold mb-4">Access Restricted</h2>
       <p className="text-gray-500">
-        The editorial dashboard is only accessible to authorized administrators. 
+        The editorial dashboard is only accessible to authorized administrators.
         If you believe this is an error, please contact the system administrator.
       </p>
       <Link to="/" className="inline-block mt-8 text-sm font-bold underline">Return to Home</Link>
@@ -804,165 +831,260 @@ const handleSave = async (e: React.FormEvent) => {
   return (
     <div className="pt-32 pb-40 min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-12">
+
+        {/* Header */}
+        <div className="flex justify-between items-center mb-10">
           <div>
             <h1 className="text-4xl font-serif font-bold">Editorial Dashboard</h1>
-            <p className="text-gray-500 mt-2">Manage your publications and blogs</p>
+            <p className="text-gray-500 mt-2">Manage your publications and reels</p>
           </div>
-          <button 
-            onClick={() => setIsEditing(true)}
+          <button
+            onClick={() => { if (activeTab === 'blogs') { setCurrentPost(emptyPost()); setIsEditingPost(true); } else { setCurrentReel(emptyReel()); setIsEditingReel(true); } }}
             className="flex items-center space-x-2 bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-900 transition-all"
           >
             <Plus className="w-5 h-5" />
-            <span>New Blog</span>
+            <span>{activeTab === 'blogs' ? 'New Blog' : 'New Reel'}</span>
           </button>
         </div>
 
-        {isEditing ? (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100"
-          >
-            <form onSubmit={handleSave} className="space-y-8">
-              <div className="grid grid-cols-1 gap-8">
+        {/* Tabs */}
+        <div className="flex gap-2 mb-8 bg-white rounded-2xl p-1.5 border border-gray-100 shadow-sm w-fit">
+          {(['blogs', 'reels'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => { setActiveTab(tab); setIsEditingPost(false); setIsEditingReel(false); }}
+              className={cn(
+                "px-6 py-2.5 rounded-xl font-bold text-sm capitalize transition-all",
+                activeTab === tab ? "bg-black text-white shadow" : "text-gray-500 hover:text-black"
+              )}
+            >
+              {tab === 'blogs' ? 'Blogs' : 'Reels'}
+            </button>
+          ))}
+        </div>
+
+        {/* ---- BLOGS TAB ---- */}
+        {activeTab === 'blogs' && (
+          isEditingPost ? (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100"
+            >
+              <form onSubmit={handleSavePost} className="space-y-8">
                 <div className="space-y-4">
                   <label className="block text-sm font-bold text-gray-700">Headline</label>
-                  <input 
-                    type="text"
-                    required
-                    value={currentPost.title}
-                    onChange={e => setCurrentPost({...currentPost, title: e.target.value})}
+                  <input type="text" required value={currentPost.title}
+                    onChange={e => setCurrentPost({ ...currentPost, title: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all"
-                    placeholder="Enter a compelling headline..."
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <label className="block text-sm font-bold text-gray-700">Excerpt</label>
-                <textarea 
-                  required
-                  value={currentPost.excerpt}
-                  onChange={e => setCurrentPost({...currentPost, excerpt: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all h-24"
-                  placeholder="A brief summary for the feed..."
-                />
-              </div>
-
-              <div className="space-y-4">
-                <label className="block text-sm font-bold text-gray-700">Content (Markdown)</label>
-                <textarea 
-                  required
-                  value={currentPost.content}
-                  onChange={e => setCurrentPost({...currentPost, content: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all h-96 font-mono text-sm"
-                  placeholder="# Start writing your blog..."
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="space-y-4">
-                  <label className="block text-sm font-bold text-gray-700">Cover Image URL</label>
-                  <input 
-                    type="text"
-                    value={currentPost.coverImage}
-                    onChange={e => setCurrentPost({...currentPost, coverImage: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all"
-                  />
+                    placeholder="Enter a compelling headline..." />
                 </div>
                 <div className="space-y-4">
-                  <label className="block text-sm font-bold text-gray-700">Status</label>
-                  <select 
-                    value={currentPost.status}
-                    onChange={e => setCurrentPost({...currentPost, status: e.target.value as 'draft' | 'published'})}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all"
-                  >
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
-                  </select>
+                  <label className="block text-sm font-bold text-gray-700">Excerpt</label>
+                  <textarea required value={currentPost.excerpt}
+                    onChange={e => setCurrentPost({ ...currentPost, excerpt: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all h-24"
+                    placeholder="A brief summary for the feed..." />
                 </div>
                 <div className="space-y-4">
-                  <label className="block text-sm font-bold text-gray-700">Reading Time</label>
-                  <input 
-                    type="text"
-                    value={currentPost.readingTime}
-                    onChange={e => setCurrentPost({...currentPost, readingTime: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all"
-                  />
+                  <label className="block text-sm font-bold text-gray-700">Content (Markdown)</label>
+                  <textarea required value={currentPost.content}
+                    onChange={e => setCurrentPost({ ...currentPost, content: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all h-96 font-mono text-sm"
+                    placeholder="# Start writing your blog..." />
                 </div>
-              </div>
-
-              <div className="flex justify-end space-x-4 pt-8">
-                <button 
-                  type="button"
-                  onClick={() => setIsEditing(false)}
-                  className="px-8 py-3 rounded-full font-bold text-gray-500 hover:text-black transition-colors"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="bg-black text-white px-10 py-3 rounded-full font-bold hover:bg-gray-900 transition-all flex items-center space-x-2"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>Save Blog</span>
-                </button>
-              </div>
-            </form>
-          </motion.div>
-        ) : (
-          <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Blog</th>
-                  <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Status</th>
-                  <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Date</th>
-                  <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {posts.map(post => (
-                  <tr key={post.id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-8 py-6">
-                      <p className="font-bold text-gray-900 line-clamp-1">{post.title}</p>
-                      <p className="text-xs text-gray-500 mt-1">{post.excerpt.substring(0, 60)}...</p>
-                    </td>
-                    <td className="px-8 py-6">
-                      <span className={cn(
-                        "inline-flex items-center space-x-1 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest",
-                        post.status === 'published' ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
-                      )}>
-                        {post.status === 'published' ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-                        <span>{post.status}</span>
-                      </span>
-                    </td>
-                    <td className="px-8 py-6 text-sm text-gray-500">
-                      {new Date(post.publishedAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-8 py-6 text-right">
-                      <div className="flex justify-end space-x-2">
-                        <button 
-                          onClick={() => { setCurrentPost(post); setIsEditing(true); }}
-                          className="p-2 hover:bg-gray-200 rounded-lg transition-colors text-gray-600"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleDelete(post.id)}
-                          className="p-2 hover:bg-red-100 rounded-lg transition-colors text-red-600"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="space-y-4">
+                    <label className="block text-sm font-bold text-gray-700">Cover Image URL</label>
+                    <input type="text" value={currentPost.coverImage}
+                      onChange={e => setCurrentPost({ ...currentPost, coverImage: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all" />
+                  </div>
+                  <div className="space-y-4">
+                    <label className="block text-sm font-bold text-gray-700">Status</label>
+                    <select value={currentPost.status}
+                      onChange={e => setCurrentPost({ ...currentPost, status: e.target.value as 'draft' | 'published' })}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all">
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                    </select>
+                  </div>
+                  <div className="space-y-4">
+                    <label className="block text-sm font-bold text-gray-700">Reading Time</label>
+                    <input type="text" value={currentPost.readingTime}
+                      onChange={e => setCurrentPost({ ...currentPost, readingTime: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all" />
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-4 pt-8">
+                  <button type="button" onClick={() => setIsEditingPost(false)}
+                    className="px-8 py-3 rounded-full font-bold text-gray-500 hover:text-black transition-colors">Cancel</button>
+                  <button type="submit"
+                    className="bg-black text-white px-10 py-3 rounded-full font-bold hover:bg-gray-900 transition-all flex items-center space-x-2">
+                    <Send className="w-4 h-4" /><span>Save Blog</span>
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          ) : (
+            <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-100">
+                    <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Blog</th>
+                    <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Status</th>
+                    <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Date</th>
+                    <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500 text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {posts.map(post => (
+                    <tr key={post.id} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="px-8 py-6">
+                        <p className="font-bold text-gray-900 line-clamp-1">{post.title}</p>
+                        <p className="text-xs text-gray-500 mt-1">{post.excerpt.substring(0, 60)}...</p>
+                      </td>
+                      <td className="px-8 py-6">
+                        <span className={cn(
+                          "inline-flex items-center space-x-1 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest",
+                          post.status === 'published' ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
+                        )}>
+                          {post.status === 'published' ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                          <span>{post.status}</span>
+                        </span>
+                      </td>
+                      <td className="px-8 py-6 text-sm text-gray-500">{new Date(post.publishedAt).toLocaleDateString()}</td>
+                      <td className="px-8 py-6 text-right">
+                        <div className="flex justify-end space-x-2">
+                          <button onClick={() => { setCurrentPost(post); setIsEditingPost(true); }}
+                            className="p-2 hover:bg-gray-200 rounded-lg transition-colors text-gray-600">
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button onClick={() => handleDeletePost(post.id)}
+                            className="p-2 hover:bg-red-100 rounded-lg transition-colors text-red-600">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
         )}
+
+        {/* ---- REELS TAB ---- */}
+        {activeTab === 'reels' && (
+          isEditingReel ? (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100"
+            >
+              <form onSubmit={handleSaveReel} className="space-y-8">
+                <div className="space-y-4">
+                  <label className="block text-sm font-bold text-gray-700">Title</label>
+                  <input type="text" required value={currentReel.title}
+                    onChange={e => setCurrentReel({ ...currentReel, title: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all"
+                    placeholder="e.g. Understanding Tort Reform in 60 Seconds" />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <label className="block text-sm font-bold text-gray-700">Views (display text)</label>
+                    <input type="text" required value={currentReel.views}
+                      onChange={e => setCurrentReel({ ...currentReel, views: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all"
+                      placeholder="e.g. 124k" />
+                  </div>
+                  <div className="space-y-4">
+                    <label className="block text-sm font-bold text-gray-700">Order (0 = first)</label>
+                    <input type="number" value={currentReel.order}
+                      onChange={e => setCurrentReel({ ...currentReel, order: parseInt(e.target.value) })}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all" />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <label className="block text-sm font-bold text-gray-700">Thumbnail Image URL</label>
+                  <input type="text" required value={currentReel.img}
+                    onChange={e => setCurrentReel({ ...currentReel, img: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all"
+                    placeholder="https://..." />
+                  {currentReel.img && (
+                    <div className="w-24 aspect-[9/16] rounded-xl overflow-hidden border border-gray-200 mt-2">
+                      <img src={currentReel.img} alt="preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
+                <div className="space-y-4">
+                  <label className="block text-sm font-bold text-gray-700">Video URL</label>
+                  <input type="text" required value={currentReel.video}
+                    onChange={e => setCurrentReel({ ...currentReel, video: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all"
+                    placeholder="https://... (direct .mp4 or embed link)" />
+                </div>
+                <div className="flex justify-end space-x-4 pt-8">
+                  <button type="button" onClick={() => setIsEditingReel(false)}
+                    className="px-8 py-3 rounded-full font-bold text-gray-500 hover:text-black transition-colors">Cancel</button>
+                  <button type="submit"
+                    className="bg-black text-white px-10 py-3 rounded-full font-bold hover:bg-gray-900 transition-all flex items-center space-x-2">
+                    <Send className="w-4 h-4" /><span>Save Reel</span>
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          ) : (
+            <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+              {reels.length === 0 ? (
+                <div className="text-center py-20 text-gray-400">
+                  <Eye className="w-10 h-10 mx-auto mb-4 opacity-30" />
+                  <p className="font-bold">No reels yet. Add your first one!</p>
+                </div>
+              ) : (
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-100">
+                      <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Reel</th>
+                      <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Views</th>
+                      <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500">Order</th>
+                      <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-gray-500 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {reels.map(reel => (
+                      <tr key={reel.id} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-8 py-5">
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 aspect-[9/16] rounded-lg overflow-hidden flex-none bg-gray-100">
+                              <img src={reel.img} alt={reel.title} className="w-full h-full object-cover" />
+                            </div>
+                            <p className="font-bold text-gray-900 line-clamp-2 text-sm">{reel.title}</p>
+                          </div>
+                        </td>
+                        <td className="px-8 py-5">
+                          <span className="inline-flex items-center gap-1 text-sm font-bold text-gray-700">
+                            <Eye className="w-3.5 h-3.5 text-gray-400" />{reel.views}
+                          </span>
+                        </td>
+                        <td className="px-8 py-5 text-sm text-gray-500">#{reel.order ?? '—'}</td>
+                        <td className="px-8 py-5 text-right">
+                          <div className="flex justify-end space-x-2">
+                            <button onClick={() => { setCurrentReel(reel); setIsEditingReel(true); }}
+                              className="p-2 hover:bg-gray-200 rounded-lg transition-colors text-gray-600">
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => handleDeleteReel(reel.id)}
+                              className="p-2 hover:bg-red-100 rounded-lg transition-colors text-red-600">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          )
+        )}
+
       </div>
     </div>
   );

@@ -98,3 +98,14 @@
     scrollbar-width: none;
   }
 }
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900 antialiased;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+  body::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+}
