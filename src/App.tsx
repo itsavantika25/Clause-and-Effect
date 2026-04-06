@@ -81,7 +81,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
           <div className="flex items-center gap-4">
             <button onClick={() => handleNavClick('/', true)} className="flex items-center gap-4 group">
               <div className="w-10 h-10 rounded-full flex items-center justify-center transition-transform">
-               <img src="/img/logo.png" alt="logo" />
+               <img src="/Clause-and-Effect/src/img/logo.png" alt="logo" />
               </div>
               <span className="text-2xl font-serif text-[#050a18] tracking-tighter font-headline font-bold">Clause & Effect</span>
             </button>
@@ -245,9 +245,9 @@ const Landing = () => {
   const [selectedReel, setSelectedReel] = useState<any>(null);
 
   const team = [
-    { name: 'Ridhima Khanna', role: 'Founder & President', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=500' },
+    { name: 'Ridhima Khanna', role: 'Founder & President', img: '/src/img/ridhima.jpeg' },
     { name: 'Asees Kaur Oberoi', role: 'Co-Founder & Vice president', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400&h=500' },
-    { name: 'Avantika Agarwal', role: 'Co-Founder & Technical Head', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=500' },
+    { name: 'Avantika Agarwal', role: 'Co-Founder & Technical Head', img: '/src/img/avantika.JPG' },
     { name: 'Devanshi Pahwa', role: 'Research Head', img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400&h=500' },
     { name: 'Hiya Agarwal', role: 'Graphic Designer', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=500' }
   ];
@@ -284,7 +284,7 @@ const Landing = () => {
               Creating change through conversations, sparking thought and encouraging the youth to think past just what we're told.
             </p>
             <div className="flex items-center gap-6 pt-4">
-              <Link to="/blogs" className="px-8 py-4 bg-[#fdd25c] text-[#050a18] rounded-xl font-bold text-lg hover:scale-105 transition-transform">Start the Brief</Link>
+              <Link to="/blogs" className="px-8 py-4 bg-[#fdd25c] text-[#050a18] rounded-xl font-bold text-lg hover:scale-105 transition-transform">Blogs</Link>
               <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-4 text-white border border-white/20 rounded-xl font-bold text-lg backdrop-blur-sm hover:bg-white/10 transition-colors">Our Vision</button>
             </div>
           </motion.div>
