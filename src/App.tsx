@@ -798,18 +798,24 @@ const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
     if (window.confirm('Delete this blog post?')) await deleteDoc(doc(db, 'posts', id));
   };
 
-  const handleSaveReel = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (currentReel.id) {
-        await updateDoc(doc(db, 'reels', currentReel.id), { ...currentReel });
-      } else {
-        await addDoc(collection(db, 'reels'), { ...currentReel });
-      }
-      setIsEditingReel(false);
-      setCurrentReel(emptyReel());
-    } catch (err) { console.error("Error saving reel:", err); }
-  };
+const handleSaveReel = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    if (currentReel.id) {
+      // Update existing
+      await updateDoc(doc(db, 'reels', currentReel.id), { ...currentReel });
+    } else {
+      // Create new - exclude id
+      const reelData = { ...currentReel };
+      delete reelData.id;  // Remove undefined id
+      await addDoc(collection(db, 'reels'), reelData);
+    }
+    setIsEditingReel(false);
+    setCurrentReel(emptyReel);
+  } catch (err) {
+    console.error('Error saving reel:', err);
+  }
+};
 
   const handleDeleteReel = async (id: string) => {
     if (window.confirm('Delete this reel?')) await deleteDoc(doc(db, 'reels', id));
