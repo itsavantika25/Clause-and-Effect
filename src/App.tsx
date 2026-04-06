@@ -19,14 +19,6 @@ import { db, auth, signInWithGoogle, logout } from './firebase';
 import { Post, UserProfile } from './types';
 import { cn } from './lib/utils';
 
-interface Reel {
-  id?: string;
-  reelUrl: string;
-  coverImage: string;
-  caption: string;
-  views: number;
-}
-
 // --- Components ---
 
 const Navbar = ({ user }: { user: FirebaseUser | null }) => {
@@ -266,22 +258,12 @@ const Landing = () => {
     { name: 'Hiya Agarwal', role: 'Graphic Designer', img: '/img/hiya.jpeg' }
   ];
 
-   const [reels, setReels] = useState<Reel[]>([]);
-   // REELS
-useEffect(() => {
-  const q = query(collection(db, 'reels'), orderBy('views', 'desc'));
-
-  const unsubscribe = onSnapshot(q, (snapshot) => {
-setReels(
-  snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...(doc.data() as Omit<Reel, 'id'>)
-  }))
-);
-  });
-
-  return () => unsubscribe();
-}, []);
+  const reels = [
+    { id: 1, views: '124k', title: 'Understanding Tort Reform in 60 Seconds', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-reading-a-document-in-his-office-40011-large.mp4' },
+    { id: 2, views: '89k', title: 'The Future of Intellectual Property', img: 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-working-at-his-desk-40010-large.mp4' },
+    { id: 3, views: '210k', title: 'Corporate Ethics vs. Compliance', img: 'https://images.unsplash.com/photo-1450175804616-78ff2560c047?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-talking-on-the-phone-in-his-office-40009-large.mp4' },
+    { id: 4, views: '56k', title: 'Navigating Privacy in the Digital Era', img: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-writing-on-a-notebook-40012-large.mp4' }
+  ];
 
   return (
     <main className="pt-20">
@@ -380,38 +362,48 @@ setReels(
         </div>
       </section>
 
-    {/* REELS SECTION */}
-<section className="py-20 px-4 bg-white">
-  <div className="max-w-7xl mx-auto">
-    
-    <h2 className="text-3xl font-bold mb-8">
-      Trending Verdicts 
-    </h2>
-
-   <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-  {reels.map(reel => (
-    <a 
-      href={reel.reelUrl} 
-      target="_blank" 
-      key={reel.id!}
-      className="min-w-[200px] md:min-w-[250px] group"
-    >
-      <div className="aspect-[9/16] overflow-hidden rounded-2xl">
-        <img 
-          src={reel.coverImage} 
-          className="w-full h-full object-cover group-hover:scale-105 transition"
-        />
-      </div>
-
-      <p className="text-sm mt-2 font-semibold">
-        {reel.caption}
-      </p>
-    </a>
-  ))}
-</div>
-
-  </div>
-</section>
+      {/* Popular Reels Carousel */}
+      <section className="py-24 bg-gray-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-8 mb-12 flex justify-between items-end">
+          <div className="brief-accent">
+            <h2 className="text-4xl font-headline font-bold">Trending Verdicts</h2>
+            <p className="text-gray-500 mt-2 font-body">Bite-sized legal insights from our social community <a href="https://instagram.com/clauseandeffect_" target="_blank" rel="noopener noreferrer" className="text-[#fdd25c] font-bold">@clauseandeffect_</a></p>
+          </div>
+          <div className="flex gap-2">
+            <button className="p-3 bg-white rounded-full shadow-sm hover:bg-slate-50 transition-colors">
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <button className="p-3 bg-white rounded-full shadow-sm hover:bg-slate-50 transition-colors">
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex gap-6 px-8 overflow-x-auto no-scrollbar pb-8">
+          {reels.map(reel => (
+            <motion.div 
+              key={reel.id} 
+              whileHover={{ y: -10 }}
+              onClick={() => setSelectedReel(reel)}
+              className="flex-none w-72 aspect-[9/16] rounded-2xl bg-black relative group cursor-pointer overflow-hidden shadow-xl"
+            >
+              <img className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" alt={reel.title} src={reel.img} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+              <div className="absolute bottom-6 left-6 right-6">
+                <div className="flex items-center gap-2 text-white/80 text-xs mb-2">
+                  <Eye className="w-4 h-4" />
+                  <span>{reel.views} views</span>
+                </div>
+                <p className="text-white font-bold leading-tight">{reel.title}</p>
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
+                  <ArrowRight className="w-8 h-8 text-white" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
       {/* Meet the Team Section */}
       <section id="team" className="py-32 bg-white">
@@ -506,14 +498,14 @@ setReels(
                 <X className="w-6 h-6" />
               </button>
               <video 
-                src={selectedReel.reelUrl} 
+                src={selectedReel.video} 
                 autoPlay 
                 controls 
                 loop
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black to-transparent">
-                <h3 className="text-white text-xl font-bold mb-2">{selectedReel.caption}</h3>
+                <h3 className="text-white text-xl font-bold mb-2">{selectedReel.title}</h3>
                 <p className="text-white/60 text-sm">Watch more on Instagram @clauseandeffect_</p>
               </div>
             </motion.div>
@@ -527,7 +519,6 @@ setReels(
 const BlogList = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
-  
 
   useEffect(() => {
     const q = query(
@@ -739,34 +730,15 @@ const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
     views: 0
   });
 
-  const [currentReel, setCurrentReel] = useState({
-    reelUrl: '',
-    coverImage: '',
-    caption: '',
-    views:0
-  });
-  const formatViews = (views: number) => {
-  if (views >= 1000) return (views / 1000).toFixed(1) + 'k views';
-  return views + ' views';
-};
   
 
-// POSTS
-useEffect(() => {
-  const q = query(collection(db, 'posts'), orderBy('publishedAt', 'desc'));
-
-  const unsubscribe = onSnapshot(q, (snapshot) => {
-    setPosts(snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as Post[]);
-  });
-
-  return () => unsubscribe();
-}, []);
-
-
-
+  useEffect(() => {
+    const q = query(collection(db, 'posts'), orderBy('publishedAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setPosts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Post[]);
+    });
+    return () => unsubscribe();
+  }, []);
 
 const handleSave = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -810,37 +782,11 @@ const handleSave = async (e: React.FormEvent) => {
   }
 };
 
-const handleSaveReel = async () => {
-  try {
-    if (currentReel.id) {
-      await updateDoc(doc(db, 'reels', currentReel.id), currentReel);
-    } else {
-      await addDoc(collection(db, 'reels'), currentReel);
-    }
-
-    setCurrentReel({
-      reelUrl: '',
-      coverImage: '',
-      caption: '',
-      views: 0
-    });
-
-  } catch (err) {
-    console.error(err);
-  }
-};
-
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this post?')) {
       await deleteDoc(doc(db, 'posts', id));
     }
   };
-  
-  const handleDeleteReel = async (id: string) => {
-    if (window.confirm('Delete this reel?')) {
-    await deleteDoc(doc(db, 'reels', id));
-  }
-};
 
   if (!user) return <div className="pt-40 text-center">Please sign in to access the dashboard.</div>;
   if (!isAdmin) return (
@@ -1017,48 +963,9 @@ const handleSaveReel = async () => {
             </table>
           </div>
         )}
-        {/* REELS SECTION */}
-<div className="mt-10">
-  <h2 className="text-xl font-bold mb-4">Your Reels</h2>
-
-  {reels.map(reel => (
-    <div key={reel.id} className="flex items-center justify-between p-4 border rounded-xl mb-3">
-      
-      <div className="flex items-center gap-4">
-        <img 
-          src={reel.coverImage} 
-          className="w-16 h-24 object-cover rounded-lg"
-        />
-        <div>
-          <p className="font-semibold">{reel.caption}</p>
-          <p className="text-sm text-gray-500">{formatViews(reel.views)}</p>
-        </div>
-      </div>
-
-      <div className="flex gap-2">
-        <button 
-          onClick={() => setCurrentReel(reel)}
-          className="p-2 hover:bg-gray-200 rounded"
-        >
-          <Edit2 className="w-4 h-4" />
-        </button>
-
-        <button 
-          onClick={() => handleDeleteReel(reel.id)}
-          className="p-2 hover:bg-red-100 text-red-600 rounded"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
-      </div>
-
-    </div>
-  ))}
-</div>
       </div>
     </div>
-    
   );
-  
 };
 
 // --- Main App ---
