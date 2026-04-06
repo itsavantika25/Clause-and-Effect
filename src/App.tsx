@@ -48,6 +48,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
 
   const navLinks = [
     { name: 'Home', path: '/', isAnchor: true },
+    { name: 'About Us', path: '/#about', isAnchor: true },
     { name: 'Our Team', path: '/#team', isAnchor: true },
     { name: 'Contact', path: '/#contact', isAnchor: true },
     { name: 'Blogs', path: '/blogs', isAnchor: false },
@@ -229,6 +230,7 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-[#fdd25c] font-bold text-xs uppercase tracking-widest mb-6">Navigation</h4>
             <button onClick={() => scrollToSection('hero')} className="block text-left text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest">Home</button>
+            <button onClick={() => scrollToSection('about')} className="block text-left text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest">About Us</button>
             <button onClick={() => scrollToSection('team')} className="block text-left text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest">Our Team</button>
             <button onClick={() => scrollToSection('contact')} className="block text-left text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-sm uppercase tracking-widest">Contact Us</button>
           </div>
@@ -252,16 +254,24 @@ const Landing = () => {
     { name: 'Ridhima Khanna', role: 'Founder & President', img: '/img/ridhima.jpeg' },
     { name: 'Asees Kaur Oberoi', role: 'Co-Founder & Vice president', img: '/img/asees.png' },
     { name: 'Avantika Agarwal', role: 'Co-Founder & Technical Head', img: '/img/avantika.JPG' },
-    { name: 'Devanshi Pahwa', role: 'Research Head', img: '/img/devanshi.jpeg' },
+    { name: 'Devanshi Pahwa', role: 'Research Head', img: '/img/devanshi.webp' },
     { name: 'Hiya Agarwal', role: 'Graphic Designer', img: '/img/hiya.jpeg' }
   ];
 
-  const reels = [
-    { id: 1, views: '124k', title: 'Understanding Tort Reform in 60 Seconds', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-reading-a-document-in-his-office-40011-large.mp4' },
-    { id: 2, views: '89k', title: 'The Future of Intellectual Property', img: 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-working-at-his-desk-40010-large.mp4' },
-    { id: 3, views: '210k', title: 'Corporate Ethics vs. Compliance', img: 'https://images.unsplash.com/photo-1450175804616-78ff2560c047?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-talking-on-the-phone-in-his-office-40009-large.mp4' },
-    { id: 4, views: '56k', title: 'Navigating Privacy in the Digital Era', img: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=400&h=700', video: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-writing-on-a-notebook-40012-large.mp4' }
-  ];
+   const [reels, setReels] = useState<any[]>([]);
+   // REELS
+useEffect(() => {
+  const q = query(collection(db, 'reels'), orderBy('views', 'desc'));
+
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    setReels(snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })));
+  });
+
+  return () => unsubscribe();
+}, []);
 
   return (
     <main className="pt-20">
@@ -279,10 +289,10 @@ const Landing = () => {
             transition={{ duration: 0.8 }}
             className="space-y-8"
           >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-[#fdd25c]/10 text-[#fdd25c] text-xs font-bold tracking-[0.2em] uppercase">Asking the Questions Others are too Scared to Think.</span>
+            <span className="inline-block px-4 py-1.5 rounded-full bg-[#fdd25c]/10 text-[#fdd25c] text-xs font-bold tracking-[0.2em] uppercase">Asking the Questions Others are too Scared to Think Of.</span>
             <h1 className="text-6xl md:text-8xl font-headline text-white leading-[0.9] tracking-tight">
              Breaking Down <br />
-              <span className="italic text-[#fdd25c]">the Indian Law</span>
+              <span className="italic text-[#fdd25c]">the Indian Law.</span>
             </h1>
             <p className="text-xl text-slate-300 max-w-md font-body leading-relaxed">
               Creating change through conversations, sparking thought and encouraging the youth to think past just what we're told.
@@ -302,8 +312,8 @@ const Landing = () => {
               <img className="w-full h-full object-cover" alt="abstract architectural shot" src="https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&q=80&w=800&h=1000" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
               <div className="absolute bottom-8 left-8 right-8">
-                <p className="text-white font-headline text-2xl">"Justice is the first virtue of social institutions."</p>
-                <p className="text-[#fdd25c] mt-2 font-label text-sm uppercase tracking-widest">— John Rawls</p>
+                <p className="text-white font-headline text-2xl">"It is the Responsibility of the Patriot to Protect his Country from its Government."</p>
+                <p className="text-[#fdd25c] mt-2 font-label text-sm uppercase tracking-widest">— Thomas Paine.</p>
               </div>
             </motion.div>
           </div>
@@ -340,14 +350,14 @@ const Landing = () => {
             </div>
             <div className="md:col-span-4 bg-[#fdd25c] p-8 rounded-3xl flex items-center justify-center text-center">
               <div>
-                <div className="text-5xl font-headline font-extrabold text-[#050a18] mb-2">500+</div>
-                <div className="text-sm font-label uppercase tracking-widest text-[#050a18]/60">Legal Analyses</div>
+                <div className="text-5xl font-headline font-extrabold text-[#050a18] mb-2">68k+</div>
+                <div className="text-sm font-label uppercase tracking-widest text-[#050a18]/60">Views on Instagram</div>
               </div>
             </div>
             <div className="md:col-span-4 bg-gray-100 p-8 rounded-3xl flex items-center justify-center text-center">
               <div>
-                <div className="text-5xl font-headline font-extrabold text-[#050a18] mb-2">24/7</div>
-                <div className="text-sm font-label uppercase tracking-widest text-gray-500">Active Advocacy</div>
+                <div className="text-5xl font-headline font-extrabold text-[#050a18] mb-2">210+</div>
+                <div className="text-sm font-label uppercase tracking-widest text-gray-500">Followers on Instagram</div>
               </div>
             </div>
             <div className="md:col-span-4 bg-gray-200 p-8 rounded-3xl flex items-center justify-center text-center">
@@ -360,48 +370,35 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Popular Reels Carousel */}
-      <section className="py-24 bg-gray-50 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-8 mb-12 flex justify-between items-end">
-          <div className="brief-accent">
-            <h2 className="text-4xl font-headline font-bold">Trending Verdicts</h2>
-            <p className="text-gray-500 mt-2 font-body">Bite-sized legal insights from our social community <a href="https://instagram.com/clauseandeffect_" target="_blank" rel="noopener noreferrer" className="text-[#fdd25c] font-bold">@clauseandeffect_</a></p>
-          </div>
-          <div className="flex gap-2">
-            <button className="p-3 bg-white rounded-full shadow-sm hover:bg-slate-50 transition-colors">
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <button className="p-3 bg-white rounded-full shadow-sm hover:bg-slate-50 transition-colors">
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-        <div className="flex gap-6 px-8 overflow-x-auto no-scrollbar pb-8">
-          {reels.map(reel => (
-            <motion.div 
-              key={reel.id} 
-              whileHover={{ y: -10 }}
-              onClick={() => setSelectedReel(reel)}
-              className="flex-none w-72 aspect-[9/16] rounded-2xl bg-black relative group cursor-pointer overflow-hidden shadow-xl"
-            >
-              <img className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" alt={reel.title} src={reel.img} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-              <div className="absolute bottom-6 left-6 right-6">
-                <div className="flex items-center gap-2 text-white/80 text-xs mb-2">
-                  <Eye className="w-4 h-4" />
-                  <span>{reel.views} views</span>
-                </div>
-                <p className="text-white font-bold leading-tight">{reel.title}</p>
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
-                  <ArrowRight className="w-8 h-8 text-white" />
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+    {/* REELS SECTION */}
+<section className="py-20 px-4 bg-white">
+  <div className="max-w-7xl mx-auto">
+    
+    <h2 className="text-3xl font-bold mb-8">
+      Trending Verdicts 
+    </h2>
+
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+      {reels.map(reel => (
+        <a 
+          href={reel.reelUrl} 
+          target="_blank" 
+          key={reel.id}
+          className="group"
+        >
+          <img 
+            src={reel.coverImage} 
+            className="rounded-xl w-full h-48 object-cover group-hover:scale-105 transition"
+          />
+          <p className="text-sm mt-2 font-semibold">
+            {reel.caption}
+          </p>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</section>
 
       {/* Meet the Team Section */}
       <section id="team" className="py-32 bg-white">
@@ -425,41 +422,52 @@ const Landing = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-32 px-8 bg-[#050a18] text-white">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-block w-24 h-1 bg-[#fdd25c] mb-12"></div>
-          <h2 className="text-5xl md:text-7xl font-headline font-bold mb-8">Contact Us, 24/7</h2>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-16">
-            Feel free to reach out to us anytime for legal advice, debates or just to talk about any legal topics. DM us on Instagram, or email us for more formal queries.
-          </p>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <a 
-              href="https://instagram.com/clauseandeffect_" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex flex-col items-center p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
-            >
-              <div className="w-16 h-16 rounded-full bg-[#fdd25c] flex items-center justify-center text-[#050a18] mb-6 group-hover:scale-110 transition-transform">
-                <Globe className="w-8 h-8" />
-              </div>
-              <h3 className="text-2xl font-headline font-bold mb-2">Instagram</h3>
-              <p className="text-[#fdd25c] font-bold">@clauseandeffect_</p>
-            </a>
-            
-            <a 
-              href="mailto:clause.and.effect57@gmail.com"
-              className="flex flex-col items-center p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
-            >
-              <div className="w-16 h-16 rounded-full bg-[#fdd25c] flex items-center justify-center text-[#050a18] mb-6 group-hover:scale-110 transition-transform">
-                <Send className="w-8 h-8" />
-              </div>
-              <h3 className="text-2xl font-headline font-bold mb-2">Email</h3>
-              <p className="text-[#fdd25c] font-bold">@clause.and.effect57@gmail.com</p>
-            </a>
-          </div>
+<section id="contact" className="py-20 px-4 sm:px-6 md:py-32 md:px-8 bg-[#050a18] text-white">
+  <div className="max-w-7xl mx-auto text-center">
+    
+    <div className="inline-block w-16 sm:w-24 h-1 bg-[#fdd25c] mb-8 sm:mb-12"></div>
+
+    <h2 className="text-3xl sm:text-5xl md:text-7xl font-headline font-bold mb-6 sm:mb-8">
+      Contact Us, 24/7
+    </h2>
+
+    <p className="text-base sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 sm:mb-16 px-2">
+      Feel free to reach out to us anytime for legal advice, debates or just to talk about any legal topics. DM us on Instagram, or email us for more formal queries.
+    </p>
+    
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
+      
+      <a 
+        href="https://instagram.com/clauseandeffect_" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="flex flex-col items-center p-8 sm:p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
+      >
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#fdd25c] flex items-center justify-center text-[#050a18] mb-4 sm:mb-6 group-hover:scale-110 transition-transform">
+          <Globe className="w-6 h-6 sm:w-8 sm:h-8" />
         </div>
-      </section>
+        <h3 className="text-xl sm:text-2xl font-headline font-bold mb-1 sm:mb-2">Instagram</h3>
+        <p className="text-[#fdd25c] font-bold text-sm sm:text-base break-all">
+          @clauseandeffect_
+        </p>
+      </a>
+      
+      <a 
+        href="mailto:clause.and.effect57@gmail.com"
+        className="flex flex-col items-center p-8 sm:p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
+      >
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#fdd25c] flex items-center justify-center text-[#050a18] mb-4 sm:mb-6 group-hover:scale-110 transition-transform">
+          <Send className="w-6 h-6 sm:w-8 sm:h-8" />
+        </div>
+        <h3 className="text-xl sm:text-2xl font-headline font-bold mb-1 sm:mb-2">Email</h3>
+        <p className="text-[#fdd25c] font-bold text-sm sm:text-base break-all">
+          clause.and.effect57@gmail.com
+        </p>
+      </a>
+
+    </div>
+  </div>
+</section>
 
       {/* Video Modal */}
       <AnimatePresence>
@@ -506,6 +514,7 @@ const Landing = () => {
 const BlogList = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     const q = query(
@@ -542,7 +551,7 @@ const BlogList = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-16">
           <h1 className="text-5xl font-serif font-bold mb-4">C&E Blog</h1>
-          <p className="text-gray-500 text-lg">Latest legal analysis and editorial insights, sorted by date.</p>
+          <p className="text-gray-500 text-lg">Read our views and analysis on various legal issues and updates today.</p>
         </div>
 
         {posts.length === 0 ? (
@@ -667,7 +676,7 @@ const PostDetail = () => {
             <div className="h-8 w-px bg-gray-200" />
             <div className="text-sm text-gray-500">
               <p>Published</p>
-              <p className="font-medium text-black">{new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+              <p className="font-medium text-black">{new Date(post.publishedAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
             </div>
           </div>
 
@@ -694,7 +703,8 @@ const AdminEmails = [
   'clause.and.effect57@gmail.com',
   'ridhimakhanna2001@gmail.com',
   'aseeskauroberoi@gmail.com',
-  'devanshi.pahwa@gmail.com'
+  'devanshi.pahwa@gmail.com',
+  'hiyaconnect@gmail.com'
 ];
 
 const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
@@ -716,15 +726,34 @@ const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
     views: 0
   });
 
+  const [currentReel, setCurrentReel] = useState({
+    reelUrl: '',
+    coverImage: '',
+    caption: '',
+    views:0
+  });
+  const formatViews = (views: number) => {
+  if (views >= 1000) return (views / 1000).toFixed(1) + 'k views';
+  return views + ' views';
+};
   
 
-  useEffect(() => {
-    const q = query(collection(db, 'posts'), orderBy('publishedAt', 'desc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setPosts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Post[]);
-    });
-    return () => unsubscribe();
-  }, []);
+// POSTS
+useEffect(() => {
+  const q = query(collection(db, 'posts'), orderBy('publishedAt', 'desc'));
+
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    setPosts(snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as Post[]);
+  });
+
+  return () => unsubscribe();
+}, []);
+
+
+
 
 const handleSave = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -765,6 +794,24 @@ const handleSave = async (e: React.FormEvent) => {
 
   } catch (err) {
     console.error("Error saving post:", err);
+  }
+};
+
+const handleSaveReel = async () => {
+  try {
+    await addDoc(collection(db, 'reels'), {
+      ...currentReel
+    });
+
+    setCurrentReel({
+      reelUrl: '',
+      coverImage: '',
+      caption: '',
+      views: 0
+    });
+
+  } catch (err) {
+    console.error("Error saving reel:", err);
   }
 };
 
@@ -949,9 +996,54 @@ const handleSave = async (e: React.FormEvent) => {
             </table>
           </div>
         )}
+        {/* REELS SECTION */}
+<div className="mt-20">
+  <h2 className="text-2xl font-bold mb-6">Add Reel</h2>
+
+  <input
+    type="text"
+    placeholder="Reel URL"
+    value={currentReel.reelUrl}
+    onChange={e => setCurrentReel({...currentReel, reelUrl: e.target.value})}
+    className="w-full mb-4 p-3 border rounded-xl"
+  />
+
+  <input
+    type="text"
+    placeholder="Cover Image URL"
+    value={currentReel.coverImage}
+    onChange={e => setCurrentReel({...currentReel, coverImage: e.target.value})}
+    className="w-full mb-4 p-3 border rounded-xl"
+  />
+
+  <input
+    type="number"
+    placeholder="Views"
+    value={currentReel.views}
+    onChange={e => setCurrentReel({...currentReel, views: Number(e.target.value)})}
+    className="w-full mb-4 p-3 border rounded-xl"
+  />
+
+  <input
+    type="text"
+    placeholder="Caption"
+    value={currentReel.caption}
+    onChange={e => setCurrentReel({...currentReel, caption: e.target.value})}
+    className="w-full mb-4 p-3 border rounded-xl"
+  />
+
+  <button 
+    onClick={handleSaveReel}
+    className="bg-black text-white px-6 py-3 rounded-xl font-bold"
+  >
+    Save Reel
+  </button>
+</div>
       </div>
     </div>
+    
   );
+  
 };
 
 // --- Main App ---
