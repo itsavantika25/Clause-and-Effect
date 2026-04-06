@@ -250,10 +250,10 @@ const Landing = () => {
 
   const team = [
     { name: 'Ridhima Khanna', role: 'Founder & President', img: '/img/ridhima.jpeg' },
-    { name: 'Asees Kaur Oberoi', role: 'Co-Founder & Vice president', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400&h=500' },
+    { name: 'Asees Kaur Oberoi', role: 'Co-Founder & Vice president', img: '/img/asees.png' },
     { name: 'Avantika Agarwal', role: 'Co-Founder & Technical Head', img: '/img/avantika.JPG' },
-    { name: 'Devanshi Pahwa', role: 'Research Head', img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400&h=500' },
-    { name: 'Hiya Agarwal', role: 'Graphic Designer', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=500' }
+    { name: 'Devanshi Pahwa', role: 'Research Head', img: '/img/devanshi.jpeg' },
+    { name: 'Hiya Agarwal', role: 'Graphic Designer', img: '/img/hiya.jpeg' }
   ];
 
   const reels = [
@@ -693,7 +693,8 @@ const AdminEmails = [
   'avantika.agarwal2505@gmail.com',
   'clause.and.effect57@gmail.com',
   'ridhimakhanna2001@gmail.com',
-  'aseeskauroberoi@gmail.com'
+  'aseeskauroberoi@gmail.com',
+  'devanshi.pahwa@gmail.com'
 ];
 
 const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
