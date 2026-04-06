@@ -77,13 +77,13 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
   return (
     <>
       <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100">
-        <div className="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
+        <div className="flex justify-between items-center px-4 md:px-8 py-3 md:py-4 max-w-screen-2xl mx-auto">
           <div className="flex items-center gap-4">
             <button onClick={() => handleNavClick('/', true)} className="flex items-center gap-4 group">
               <div className="w-10 h-10 rounded-full flex items-center justify-center transition-transform">
-               <img src="/img/logo.png" alt="logo" className="w-10 h-10 object-contain" />
+               <img src="/img/logo.png" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
               </div>
-              <span className="text-2xl font-serif text-[#050a18] tracking-tighter font-headline font-bold">Clause & Effect</span>
+              <span className="text-lg md:text-2xl font-serif text-[#050a18] tracking-tighter font-headline font-bold">Clause & Effect</span>
             </button>
           </div>
           
@@ -106,7 +106,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
               <Link 
                 to="/admin" 
                 className={cn(
-                  "transition-all duration-300 ease-in-out pb-1",
+                  "transition-all duration-300 ease-in-out pb-1 font-bold",
                   location.pathname === '/admin' 
                     ? "text-slate-900 border-b-2 border-[#fdd25c]" 
                     : "text-slate-500 hover:text-[#0A1128]"
@@ -117,17 +117,21 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
             )}
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             {user ? (
-              <div className="flex items-center gap-4">
-                <img src={user.photoURL || ''} alt={user.displayName || ''} className="w-8 h-8 rounded-full" />
-                <button 
-                  onClick={logout}
-                  className="px-6 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-all"
-                >
-                  Logout
-                </button>
-              </div>
+         <div className="flex items-center gap-2 md:gap-4">
+  <img 
+    src={user.photoURL || ''} 
+    alt={user.displayName || ''} 
+    className="hidden md:block w-8 h-8 rounded-full" 
+  />
+  <button 
+    onClick={logout}
+    className="px-3 md:px-6 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-all text-sm md:text-base"
+  >
+    Logout
+  </button>
+</div>
             ) : (
               <button 
                 onClick={handleSignIn}
@@ -139,7 +143,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
             )}
             
             {/* Mobile Menu Toggle */}
-            <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2">
+            <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2 ml-1">
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
@@ -154,7 +158,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
               exit={{ opacity: 0, height: 0 }}
               className="md:hidden bg-white border-b border-gray-100 overflow-hidden"
             >
-              <div className="px-8 pt-2 pb-6 space-y-4 font-headline">
+             <div className="px-4 pt-2 pb-6 space-y-4 font-headline">
                 {navLinks.map((link) => (
                   <button
                     key={link.name}
@@ -444,7 +448,7 @@ const Landing = () => {
             </a>
             
             <a 
-              href="mailto:briefs@clause.and.effect57@gmail.com"
+              href="mailto:clause.and.effect57@gmail.com"
               className="flex flex-col items-center p-12 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
             >
               <div className="w-16 h-16 rounded-full bg-[#fdd25c] flex items-center justify-center text-[#050a18] mb-6 group-hover:scale-110 transition-transform">
@@ -636,7 +640,7 @@ const PostDetail = () => {
         >
           <Link to="/blogs" className="inline-flex items-center space-x-2 text-sm font-bold text-gray-500 hover:text-black mb-12 transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Briefings</span>
+            <span>Back to Blogs</span>
           </Link>
 
           <div className="flex items-center space-x-3 mb-8">
@@ -685,8 +689,15 @@ const PostDetail = () => {
   );
 };
 
+const AdminEmails = [
+  'avantika.agarwal2505@gmail.com',,
+  'clause.and.effect57@gmail.com',
+  'ridhimakhanna2001@gmail.com',
+  'aseeskauroberoi@gmail.com'
+];
+
 const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
-  const isAdmin = user?.email === 'avantika.agarwal2505@gmail.com';
+  const isAdmin = user?.email && AdminEmails.includes(user.email);
   const [posts, setPosts] = useState<Post[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentPost, setCurrentPost] = useState<Partial<Post>>({
@@ -711,38 +722,47 @@ const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
     return () => unsubscribe();
   }, []);
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (currentPost.id) {
-        await updateDoc(doc(db, 'posts', currentPost.id), {
-          ...currentPost,
-          publishedAt: currentPost.status === 'published' ? new Date().toISOString() : currentPost.publishedAt
-        });
-      } else {
-        await addDoc(collection(db, 'posts'), {
-          ...currentPost,
-          publishedAt: new Date().toISOString()
-        });
-      }
-      setIsEditing(false);
-      setCurrentPost({
-        title: '',
-        excerpt: '',
-        content: '',
-        authorName: user?.displayName || '',
-        authorRole: 'Contributor',
-        authorImage: user?.photoURL || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100',
-        coverImage: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200&h=800',
-        readingTime: '5 min read',
-        status: 'draft',
-        publishedAt: new Date().toISOString(),
-        views: 0
+const handleSave = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    if (currentPost.id) {
+      await updateDoc(doc(db, 'posts', currentPost.id), {
+        ...currentPost,
+        publishedAt: currentPost.status === 'published'
+          ? new Date().toISOString()
+          : currentPost.publishedAt
       });
-    } catch (err) {
-      console.error("Error saving post:", err);
+    } else {
+      await addDoc(collection(db, 'posts'), {
+        ...currentPost,
+        publishedAt: new Date().toISOString()
+      });
     }
-  };
+
+    setIsEditing(false);
+
+    setCurrentPost({
+      id: undefined, 
+      title: '',
+      excerpt: '',
+      content: '',
+      authorName: user?.displayName || '',
+      authorRole: 'Contributor',
+      authorImage: user?.photoURL || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100',
+      coverImage: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200&h=800',
+      readingTime: '5 min read',
+      status: 'draft',
+      publishedAt: new Date().toISOString(),
+      views: 0
+    });
+
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (err) {
+    console.error("Error saving post:", err);
+  }
+};
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this post?')) {
@@ -819,7 +839,7 @@ const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
                   value={currentPost.content}
                   onChange={e => setCurrentPost({...currentPost, content: e.target.value})}
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black outline-none transition-all h-96 font-mono text-sm"
-                  placeholder="# Start writing your analysis..."
+                  placeholder="# Start writing your blog..."
                 />
               </div>
 
