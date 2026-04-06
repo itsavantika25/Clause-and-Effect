@@ -249,9 +249,9 @@ const Landing = () => {
   const [selectedReel, setSelectedReel] = useState<any>(null);
 
   const team = [
-    { name: 'Ridhima Khanna', role: 'Founder & President', img: '/src/img/ridhima.jpeg' },
+    { name: 'Ridhima Khanna', role: 'Founder & President', img: '/img/ridhima.jpeg' },
     { name: 'Asees Kaur Oberoi', role: 'Co-Founder & Vice president', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400&h=500' },
-    { name: 'Avantika Agarwal', role: 'Co-Founder & Technical Head', img: '/src/img/avantika.JPG' },
+    { name: 'Avantika Agarwal', role: 'Co-Founder & Technical Head', img: '/img/avantika.JPG' },
     { name: 'Devanshi Pahwa', role: 'Research Head', img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400&h=500' },
     { name: 'Hiya Agarwal', role: 'Graphic Designer', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=500' }
   ];
@@ -690,13 +690,14 @@ const PostDetail = () => {
 };
 
 const AdminEmails = [
-  'avantika.agarwal2505@gmail.com',,
+  'avantika.agarwal2505@gmail.com',
   'clause.and.effect57@gmail.com',
   'ridhimakhanna2001@gmail.com',
   'aseeskauroberoi@gmail.com'
 ];
 
 const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
+  const navigate = useNavigate();
   const isAdmin = user?.email && AdminEmails.includes(user.email);
   const [posts, setPosts] = useState<Post[]>([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -713,6 +714,8 @@ const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
     publishedAt: new Date().toISOString(),
     views: 0
   });
+
+  
 
   useEffect(() => {
     const q = query(collection(db, 'posts'), orderBy('publishedAt', 'desc'));
@@ -751,12 +754,12 @@ const handleSave = async (e: React.FormEvent) => {
       authorImage: user?.photoURL || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100',
       coverImage: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200&h=800',
       readingTime: '5 min read',
-      status: 'draft',
+      status: 'published',
       publishedAt: new Date().toISOString(),
       views: 0
     });
 
-
+    navigate('/blogs');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
   } catch (err) {
