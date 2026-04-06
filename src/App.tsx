@@ -81,7 +81,7 @@ const Navbar = ({ user }: { user: FirebaseUser | null }) => {
           <div className="flex items-center gap-4">
             <button onClick={() => handleNavClick('/', true)} className="flex items-center gap-4 group">
               <div className="w-10 h-10 rounded-full flex items-center justify-center transition-transform">
-               <img src="/Clause-and-Effect/src/img/logo.png" alt="logo" />
+               <img src="/img/logo.png" alt="logo" className="w-10 h-10 object-contain" />
               </div>
               <span className="text-2xl font-serif text-[#050a18] tracking-tighter font-headline font-bold">Clause & Effect</span>
             </button>
@@ -686,7 +686,7 @@ const PostDetail = () => {
 };
 
 const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
-  const isAdmin = user?.email === 'avantika.agarwal2505@gmail.com' || user?.email === 'clause.and.effect57@gmail.com';
+  const isAdmin = user?.email === 'avantika.agarwal2505@gmail.com';
   const [posts, setPosts] = useState<Post[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentPost, setCurrentPost] = useState<Partial<Post>>({
