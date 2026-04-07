@@ -248,7 +248,8 @@ const Footer = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-7xl mx-auto">
         <div className="space-y-6">
           <div className="font-headline text-2xl font-bold tracking-tighter">Clause and Effect</div>
-          <p className="text-slate-400 font-body text-sm uppercase tracking-widest leading-loose">© 2026 Clause and Effect.</p>
+          <p className="text-slate-400 font-body text-sm uppercase tracking-widest leading-loose mb-6">© 2026 Clause and Effect.</p>
+          <p className="text-slate-400 text-[#fdd25c] font-body text-xs uppercase tracking-widest leading-loose">Made with ❤︎⁠ by Avantika</p>
         </div>
         <div className="grid grid-cols-2 gap-8">
           <div className="space-y-4">
@@ -391,7 +392,7 @@ const Landing = () => {
             {[
               { bg: 'bg-[#fdd25c]', num: '68k+', label: 'Views on Instagram', textColor: 'text-[#050a18]', labelColor: 'text-[#050a18]/60' },
               { bg: 'bg-gray-100', num: '200+', label: 'Followers on Instagram', textColor: 'text-[#050a18]', labelColor: 'text-gray-500' },
-              { bg: 'bg-gray-200', num: '55', label: 'Subscribers on YouTube', textColor: 'text-[#050a18]', labelColor: 'text-gray-500' },
+              { bg: 'bg-gray-200', num: '24/7', label: 'Spreading Awareness', textColor: 'text-[#050a18]', labelColor: 'text-gray-500' },
             ].map((stat, i) => (
               <motion.div key={stat.label} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
                 className={`md:col-span-4 ${stat.bg} p-8 rounded-3xl flex items-center justify-center text-center`}>
