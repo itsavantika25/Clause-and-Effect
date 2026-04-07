@@ -369,7 +369,8 @@ const Landing = () => {
                 <Scale className="text-[#fdd25c] w-12 h-12 mb-6" />
                 <h3 className="text-3xl font-headline font-bold mb-6">Our Definitive Goal</h3>
                 <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                  We aim to bridge the gap between complex legal scholarship and public understanding. By translating the intricacies of the court into compelling editorial narratives, we empower the modern citizen to engage with the law.
+                  We aim to build a public that thinks. A public that doesn’t just follow trends or accept ideas at face value, 
+                  but pauses, questions, and forms its own opinions. Because meaningful change begins when people stop consuming passively and start thinking critically about the world around them.
                 </p>
               </div>
             </motion.div>
@@ -380,7 +381,12 @@ const Landing = () => {
               <div className="relative z-10">
                 <h3 className="text-3xl font-headline font-bold mb-6">Why We Exist</h3>
                 <p className="text-slate-300 leading-relaxed">
-                  Because tradition without evolution is stagnation. The legal world has long remained an ivory tower; we exist to deconstruct its walls through transparency and modern discourse.
+                  Clause & Effect began with a simple belief: the law should not exist above the people it governs. 
+                  Yet, too often, it is treated as something distant, unquestionable, and out of reach. 
+                  We began to challenge that idea. Because the law is not perfect, it is created by people, 
+                  and that means it carries some inherent flaws. And when something flawed is accepted without question, 
+                  it never changes. Clause & Effect exists to question, to challenge, and to bring conversations to the surface that are often avoided. 
+                  Because real change does not come from accepting the law as it is, it comes from questioning it.
                 </p>
               </div>
             </motion.div>
