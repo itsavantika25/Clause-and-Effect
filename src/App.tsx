@@ -102,86 +102,73 @@ function Navbar({ user }: { user: FirebaseUser | null }) {
   };
 
   const navLinks = [
-    { name: 'Home', path: '/', isAnchor: true },
-    { name: 'About Us', path: '/#about', isAnchor: true },
-    { name: 'Our Team', path: '/#team', isAnchor: true },
-    { name: 'Contact', path: '/#contact', isAnchor: true },
-    { name: 'Blogs', path: '/blogs', isAnchor: false },
+    { name: 'Home', path: '/#hero' },
+    { name: 'About Us', path: '/#about' },
+    { name: 'Our Team', path: '/#team' },
+    { name: 'Contact', path: '/#contact' },
+    { name: 'Blogs', path: '/blogs' },
   ];
 
-  const handleNavClick = (path: string, isAnchor: boolean) => {
-    if (isAnchor) {
-      if (location.pathname !== '/') {
-        navigate('/');
-        setTimeout(() => {
-          const id = path.split('#')[1] || 'hero';
-          document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      } else {
-        const id = path.split('#')[1] || 'hero';
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else {
-      navigate(path);
-    }
+  const handleNavClick = (path: string) => {
+    navigate(path);
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const el = document.getElementById(id);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }, 0);
+      }
+    }
+  }, [location]);
 
   return (
     <>
       <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100">
         <div className="flex justify-between items-center px-4 md:px-8 py-3 md:py-4 max-w-screen-2xl mx-auto">
-          <button onClick={() => handleNavClick('/', true)} className="flex items-center gap-4 group">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center transition-transform">
-              <img src="/img/logo.png" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
-            </div>
-            <span className="text-lg md:text-2xl font-serif text-[#050a18] tracking-tighter font-headline font-bold">Clause & Effect</span>
+          <button onClick={() => handleNavClick('/#hero')} className="flex items-center gap-4">
+            <img src="/img/logo.png" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+            <span className="text-lg md:text-2xl font-serif text-[#050a18] tracking-tighter font-bold">
+              Clause & Effect
+            </span>
           </button>
 
-          <nav className="hidden md:flex items-center space-x-8 font-headline tracking-tight">
+          <nav className="hidden md:flex items-center space-x-8 font-headline">
             {navLinks.map((link) => (
               <button
                 key={link.name}
-                onClick={() => handleNavClick(link.path, link.isAnchor)}
-                className={cn(
-                  "transition-all duration-300 ease-in-out pb-1 font-bold",
-                  (location.pathname === link.path || (location.pathname === '/' && link.path === '/'))
-                    ? "text-[#050a18] border-b-2 border-[#fdd25c]"
-                    : "text-slate-500 hover:text-[#050a18]"
-                )}
+                onClick={() => handleNavClick(link.path)}
+                className="text-slate-500 hover:text-[#050a18] font-bold"
               >
                 {link.name}
               </button>
             ))}
             {user && (
-              <Link
-                to="/admin"
-                className={cn(
-                  "transition-all duration-300 ease-in-out pb-1 font-bold",
-                  location.pathname === '/admin'
-                    ? "text-slate-900 border-b-2 border-[#fdd25c]"
-                    : "text-slate-500 hover:text-[#0A1128]"
-                )}
-              >
+              <Link to="/admin" className="text-slate-500 hover:text-[#050a18] font-bold">
                 Dashboard
               </Link>
             )}
           </nav>
 
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-3">
             {user ? (
-              <div className="flex items-center gap-2 md:gap-4">
-                <img src={user.photoURL || ''} alt={user.displayName || ''} className="hidden md:block w-8 h-8 rounded-full" />
-                <button onClick={logout} className="px-3 md:px-6 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-all text-sm md:text-base">
+              <>
+                <img src={user.photoURL || ''} className="hidden md:block w-8 h-8 rounded-full" />
+                <button onClick={logout} className="px-4 py-2 bg-black text-white rounded-xl">
                   Logout
                 </button>
-              </div>
+              </>
             ) : (
-              <button onClick={handleSignIn} disabled={isSigningIn} className="px-6 py-2 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-all">
+              <button onClick={handleSignIn} disabled={isSigningIn} className="px-4 py-2 bg-black text-white rounded-xl">
                 {isSigningIn ? "..." : "Login"}
               </button>
             )}
-            <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2 ml-1">
+
+            <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2">
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
@@ -193,20 +180,20 @@ function Navbar({ user }: { user: FirebaseUser | null }) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white border-b border-gray-100 overflow-hidden"
+              className="md:hidden bg-white border-b border-gray-100"
             >
-              <div className="px-4 pt-2 pb-6 space-y-4 font-headline">
+              <div className="px-4 py-4 space-y-4">
                 {navLinks.map((link) => (
                   <button
                     key={link.name}
-                    onClick={() => handleNavClick(link.path, link.isAnchor)}
-                    className="block w-full text-left text-lg font-bold text-[#050a18] py-2"
+                    onClick={() => handleNavClick(link.path)}
+                    className="block w-full text-left text-lg font-bold text-[#050a18]"
                   >
                     {link.name}
                   </button>
                 ))}
                 {user && (
-                  <Link to="/admin" onClick={() => setIsOpen(false)} className="block text-lg font-bold text-[#050a18] py-2">
+                  <Link to="/admin" onClick={() => setIsOpen(false)} className="block text-lg font-bold">
                     Dashboard
                   </Link>
                 )}
@@ -222,11 +209,11 @@ function Navbar({ user }: { user: FirebaseUser | null }) {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] bg-red-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center space-x-3"
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] bg-red-600 text-white px-6 py-3 rounded-full flex items-center gap-2"
           >
             <AlertCircle className="w-5 h-5" />
-            <span className="text-sm font-medium">{error}</span>
-            <button onClick={() => setError(null)} className="p-1 hover:bg-white/20 rounded-full transition-colors">
+            <span className="text-sm">{error}</span>
+            <button onClick={() => setError(null)}>
               <X className="w-4 h-4" />
             </button>
           </motion.div>
@@ -248,9 +235,9 @@ const Footer = () => {
     <footer className="w-full py-16 px-8 border-t border-slate-100 bg-[#050a18] text-white">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-7xl mx-auto">
         <div>
-          <div className="font-headline text-2xl font-bold tracking-tighter mb-6">Clause and Effect</div>
-          <p className="text-slate-400 font-body text-sm uppercase tracking-widest leading-loose mb-2">© 2026 Clause and Effect.</p>
-          <p className="text-slate-400 hover:text-[#fdd25c] font-body text-xs uppercase tracking-widest leading-loose">Made with ❤︎⁠ by A^2</p>
+          <div className="font-headline text-2xl font-bold tracking-tighter mb-6">Clause & Effect</div>
+          <p className="text-slate-400 font-body text-sm uppercase tracking-widest leading-loose mb-2">© 2026 Clause & Effect.</p>
+          <p className="text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-xs uppercase tracking-widest leading-loose">Made with ❤︎⁠ by A^2</p>
         </div>
         <div className="grid grid-cols-2 gap-8">
           <div className="space-y-4">
