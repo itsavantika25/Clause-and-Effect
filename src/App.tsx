@@ -18,6 +18,7 @@ import ReactMarkdown from 'react-markdown';
 import { db, auth, signInWithGoogle, logout } from './firebase';
 import { Post, UserProfile } from './types';
 import { cn } from './lib/utils';
+import { Analytics } from "@vercel/analytics/next";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -249,7 +250,7 @@ const Footer = () => {
         <div>
           <div className="font-headline text-2xl font-bold tracking-tighter mb-6">Clause and Effect</div>
           <p className="text-slate-400 font-body text-sm uppercase tracking-widest leading-loose mb-2">© 2026 Clause and Effect.</p>
-          <p className="text-slate-400 font-body text-xs uppercase tracking-widest leading-loose">Made with ❤︎⁠ by A^2</p>
+          <p className="text-slate-400 hover:text-[#fdd25c] font-body text-xs uppercase tracking-widest leading-loose">Made with ❤︎⁠ by A^2</p>
         </div>
         <div className="grid grid-cols-2 gap-8">
           <div className="space-y-4">
