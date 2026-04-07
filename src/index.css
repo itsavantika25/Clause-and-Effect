@@ -58,7 +58,16 @@
   --color-on-error: #ffffff;
 }
 
+/* ── Global scrollbar removal — covers all pages, all browsers ── */
 @layer base {
+  html {
+    scrollbar-width: none;       /* Firefox */
+    -ms-overflow-style: none;   /* IE / Edge */
+  }
+  html::-webkit-scrollbar {
+    display: none;               /* Chrome / Safari / Opera */
+  }
+
   body {
     @apply bg-white text-gray-900 antialiased;
   }
@@ -86,26 +95,16 @@
     border-left: 4px solid #fdd25c;
     padding-left: 1.5rem;
   }
+
   .glass-nav {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
+
+  /* Utility for any inner scrolling containers (carousel etc.) */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
-}
-
-@layer base {
-  body {
-    @apply bg-white text-gray-900 antialiased;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-  }
-  body::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
   }
 }
