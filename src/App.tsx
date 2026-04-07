@@ -381,12 +381,9 @@ const Landing = () => {
               <div className="relative z-10">
                 <h3 className="text-3xl font-headline font-bold mb-6">Why We Exist</h3>
                 <p className="text-slate-300 leading-relaxed">
-                  Clause & Effect began with a simple belief: the law should not exist above the people it governs. 
-                  Yet, too often, it is treated as something distant, unquestionable, and out of reach. 
-                  We began to challenge that idea. Because the law is not perfect, it is created by people, 
-                  and that means it carries some inherent flaws. And when something flawed is accepted without question, 
-                  it never changes. Clause & Effect exists to question, to challenge, and to bring conversations to the surface that are often avoided. 
-                  Because real change does not come from accepting the law as it is, it comes from questioning it.
+                  Clause & Effect started with a simple idea. The law should serve people, not stand above them. 
+                  But too often it feels distant and unquestioned. We want to change that. The law is made by people, so it is not perfect. 
+                  And if no one questions it, nothing improves. This space exists to ask those questions, start conversations, and push for real change.
                 </p>
               </div>
             </motion.div>
