@@ -387,8 +387,8 @@ const Landing = () => {
 
             {[
               { bg: 'bg-[#fdd25c]', num: '68k+', label: 'Views on Instagram', textColor: 'text-[#050a18]', labelColor: 'text-[#050a18]/60' },
-              { bg: 'bg-gray-100', num: '210+', label: 'Followers on Instagram', textColor: 'text-[#050a18]', labelColor: 'text-gray-500' },
-              { bg: 'bg-gray-200', num: '15k', label: 'Community Members', textColor: 'text-[#050a18]', labelColor: 'text-gray-500' },
+              { bg: 'bg-gray-100', num: '200+', label: 'Followers on Instagram', textColor: 'text-[#050a18]', labelColor: 'text-gray-500' },
+              { bg: 'bg-gray-200', num: '55', label: 'Subscribers on YouTube', textColor: 'text-[#050a18]', labelColor: 'text-gray-500' },
             ].map((stat, i) => (
               <motion.div key={stat.label} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
                 className={`md:col-span-4 ${stat.bg} p-8 rounded-3xl flex items-center justify-center text-center`}>
@@ -406,7 +406,7 @@ const Landing = () => {
       <section className="py-24 bg-gray-50 overflow-hidden">
         <div className="max-w-7xl mx-auto px-8 mb-12 flex justify-between items-end">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="brief-accent">
-            <h2 className="text-4xl font-headline font-bold">Trending Verdicts</h2>
+            <h2 className="text-4xl font-headline font-bold">Trending Reels</h2>
             <p className="text-gray-500 mt-2 font-body">
               Bite-sized legal insights from our social community{' '}
               <a href="https://instagram.com/clauseandeffect_" target="_blank" rel="noopener noreferrer" className="text-[#fdd25c] font-bold">@clauseandeffect_</a>
@@ -517,7 +517,8 @@ const Landing = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative w-full max-w-md aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl"
+              className="relative w-full max-w-md max-h-screen aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl"
+              style={{ aspectRatio: '9 / 16' }}
               onClick={e => e.stopPropagation()}
             >
               <button
@@ -543,7 +544,7 @@ const Landing = () => {
                     controls
                     loop
                     playsInline
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                   <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black to-transparent pointer-events-none">
                     <h3 className="text-white text-xl font-bold mb-2">{selectedReel.title}</h3>
