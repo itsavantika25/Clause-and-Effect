@@ -770,23 +770,47 @@ const AdminDashboard = ({ user }: { user: FirebaseUser | null }) => {
     id: undefined, title: '', views: '', img: '', video: '', order: reels.length,
   });
 
-  const handleSavePost = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (currentPost.id) {
-        await updateDoc(doc(db, 'posts', currentPost.id), {
-          ...currentPost,
-          publishedAt: currentPost.status === 'published' ? new Date().toISOString() : currentPost.publishedAt,
-        });
-      } else {
-        await addDoc(collection(db, 'posts'), { ...currentPost, publishedAt: new Date().toISOString() });
-      }
-      setIsEditingPost(false);
-      setCurrentPost(emptyPost());
-      navigate('/blogs');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (err) { console.error('Error saving post:', err); }
-  };
+ const handleSavePost = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const cleanData = (obj: any) =>
+    Object.fromEntries(
+      Object.entries(obj).filter(([_, v]) => v !== undefined)
+    );
+
+  try {
+    if (currentPost.id) {
+      // Update existing
+      const updatedData = cleanData({
+        ...currentPost,
+        publishedAt:
+          currentPost.status === 'published'
+            ? new Date().toISOString()
+            : currentPost.publishedAt,
+      });
+
+      await updateDoc(doc(db, 'posts', currentPost.id), updatedData);
+
+    } else {
+      // Create new
+      const newPost = cleanData({
+        ...currentPost,
+        publishedAt: new Date().toISOString(),
+      });
+
+      delete newPost.id; 
+      await addDoc(collection(db, 'posts'), newPost);
+    }
+
+    setIsEditingPost(false);
+    setCurrentPost(emptyPost());
+    navigate('/blogs');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (err) {
+    console.error('Error saving post:', err);
+  }
+};
 
   const handleDeletePost = async (id: string) => {
     if (window.confirm('Delete this blog post?')) await deleteDoc(doc(db, 'posts', id));
