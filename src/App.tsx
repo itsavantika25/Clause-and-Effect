@@ -246,10 +246,10 @@ const Footer = () => {
   return (
     <footer className="w-full py-16 px-8 border-t border-slate-100 bg-[#050a18] text-white">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-7xl mx-auto">
-        <div className="space-y-6">
-          <div className="font-headline text-2xl font-bold tracking-tighter">Clause and Effect</div>
-          <p className="text-slate-400 font-body text-sm uppercase tracking-widest leading-loose">© 2026 Clause and Effect.</p>
-          <p className="text-[#fdd25c] font-body text-xs uppercase tracking-widest leading-loose">Made with ❤︎⁠ by Avantika</p>
+        <div>
+          <div className="font-headline text-2xl font-bold tracking-tighter mb-6">Clause and Effect</div>
+          <p className="text-slate-400 font-body text-sm uppercase tracking-widest leading-loose mb-2">© 2026 Clause and Effect.</p>
+          <p className="text-slate-400 font-body text-xs uppercase tracking-widest leading-loose">Made with ❤︎⁠ by A^2</p>
         </div>
         <div className="grid grid-cols-2 gap-8">
           <div className="space-y-4">
