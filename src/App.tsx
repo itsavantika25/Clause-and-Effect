@@ -18,7 +18,7 @@ import ReactMarkdown from 'react-markdown';
 import { db, auth, signInWithGoogle, logout } from './firebase';
 import { Post, UserProfile } from './types';
 import { cn } from './lib/utils';
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from '@vercel/analytics/react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -1063,6 +1063,7 @@ export default function App() {
           </Routes>
         </main>
         <Footer />
+        <Analytics />
       </div>
     </Router>
   );
