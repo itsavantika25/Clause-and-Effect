@@ -237,7 +237,14 @@ const Footer = () => {
         <div>
           <div className="font-headline text-2xl font-bold tracking-tighter mb-6">Clause & Effect</div>
           <p className="text-slate-400 font-body text-sm uppercase tracking-widest leading-loose mb-2">© 2026 Clause & Effect.</p>
-          <p className="text-slate-400 hover:text-[#fdd25c] transition-colors font-body text-xs uppercase tracking-widest leading-loose">Made with ❤︎⁠ by A^2</p>
+         <a 
+  href="https://heyitsavantika25.netlify.app/" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  className="text-slate-400 hover:text-[#fdd25c] no-underline hover:no-underline transition-colors font-body text-xs uppercase tracking-widest leading-loose"
+>
+  Made with ❤︎ by A^2
+</a>
         </div>
         <div className="grid grid-cols-2 gap-8">
           <div className="space-y-4">
